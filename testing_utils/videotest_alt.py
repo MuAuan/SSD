@@ -83,21 +83,17 @@ class VideoTest(object):
         """
         INTERVAL= 33     # 待ち時間
         FRAME_RATE = 10  # fps
-        #XVID = 0x44495658
         ORG_WINDOW_NAME = "org"
         GRAY_WINDOW_NAME = "gray"
-        GRAY_FILE_NAME = "gray_SSD_result.avi"
+        OUT_FILE_NAME = "real_SSD_result.avi"
         
         vid = cv2.VideoCapture(video_path)
         width, height = self.input_shape[0], self.input_shape[1]
-        #fourcc = cv2.VideoWriter_fourcc(*'XVID')   #add
-        #out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480)) #add
-        out = cv2.VideoWriter(GRAY_FILE_NAME, \
-                      cv2.VideoWriter_fourcc(*'XVID'), \
+        out = cv2.VideoWriter(OUT_FILE_NAME, \
+                      cv_fourcc('X', 'V', 'I', 'D'), \
                       FRAME_RATE, \
                       (width, height), \
-                      False)
-##cv2.VideoWriter_fourcc(*'XVID'), 
+                      True)
 
         if not vid.isOpened():
             raise IOError(("Couldn't open video file or webcam. If you're "
@@ -173,15 +169,15 @@ class VideoTest(object):
 
                     # Draw the box on top of the to_draw image
                     class_num = int(top_label_indices[i])
-                    #cv2.rectangle(to_draw, (xmin, ymin), (xmax, ymax), 
-                                  #self.class_colors[class_num], 2)
+                    cv2.rectangle(rgb, (xmin, ymin), (xmax, ymax), 
+                                  self.class_colors[class_num], 2)   #to_draw
                     text = self.class_names[class_num] + " " + ('%.2f' % top_conf[i])
 
                     text_top = (xmin, ymin-10)
                     text_bot = (xmin + 80, ymin + 5)
                     text_pos = (xmin + 5, ymin)
-                    #cv2.rectangle(to_draw, text_top, text_bot, self.class_colors[class_num], -1)
-                    #cv2.putText(to_draw, text, text_pos, cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,0,0), 1)
+                    cv2.rectangle(rgb, text_top, text_bot, self.class_colors[class_num], -1)  #to_draw
+                    cv2.putText(rgb, text, text_pos, cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,0,0), 1)  #to_draw
                     #sys.stdout.write(text)
                     #sys.stdout.write(" ")
                     print(text," ")
@@ -199,18 +195,18 @@ class VideoTest(object):
                 curr_fps = 0
             
             # Draw FPS in top left corner
-            #cv2.rectangle(to_draw, (0,0), (50, 17), (255,255,255), -1)
-            #cv2.putText(to_draw, fps, (3,10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,0,0), 1)
+            cv2.rectangle(rgb, (0,0), (50, 17), (255,255,255), -1)  #to_draw
+            cv2.putText(rgb, fps, (3,10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,0,0), 1) #to_draw
             #out.write(to_draw)  #add
-            g_frame = cv2.cvtColor(to_draw, cv2.COLOR_BGR2GRAY)
-            cv2.imshow(ORG_WINDOW_NAME, to_draw)
+            g_frame = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
+            cv2.imshow(ORG_WINDOW_NAME, rgb)
             cv2.imshow(GRAY_WINDOW_NAME, g_frame)
             #to_draw = cv2.flip(to_draw,0)
-            out.write(g_frame)  #add to_draw
+            out.write(rgb)  #add to_draw
             
-            if cv2.waitKey(INTERVAL) & 0xFF == ord('q'):
+            if cv2.waitKey(INTERVAL)>= 0:   # & 0xFF == ord('q'):
                 break
-            elif curr_time-start_time>=60:
+            elif curr_time-start_time>=20:
                 break
             #cv2.waitKey(10)
         vid.release()   #add
