@@ -1,6 +1,6 @@
 import keras
 import pickle
-from videotest import VideoTest
+from videotest_alt import VideoTest
 import time
 
 import sys
@@ -22,7 +22,7 @@ vid_test = VideoTest(class_names, model, input_shape)
 
 # To test on webcam 0, remove the parameter (or change it to another number
 # to test on that webcam)
-vid_test.run(0)
+#vid_test.run(0)
 
 for i in range(1):
     print(i)
@@ -35,5 +35,5 @@ for i in range(1):
     #time.sleep(1.5)
     #vid_test.run('douga_car2.mp4')
     #vid_test.run('doga_scuba.mp4')
-    #vid_test.run('dougasozai_car.mp4')
+    vid_test.run('dougasozai_car.mp4')
     #vid_test.run('doga_nogisaka.mp4') 
