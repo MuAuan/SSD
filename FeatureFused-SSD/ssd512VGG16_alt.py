@@ -28,22 +28,21 @@ def SSD(input_shape, num_classes):
         https://arxiv.org/abs/1512.02325
     """
 
-    net = {}
     # Block 1
     input_tensor = Input(shape=input_shape)
     input_shape = (input_shape[1], input_shape[0], 3)
     img_size = (input_shape[1], input_shape[0])
-    vgg16_input_shape = (224, 224, 3)
+    vgg16_input_shape = (input_shape[1], input_shape[0], 3)
 
     net = {}
-    net['input'] = Input(input_shape)
+    input = Input(input_shape)
     vgg16 = VGG16(input_shape=vgg16_input_shape, include_top=False, weights='imagenet')
     FeatureExtractor = Model(inputs=vgg16.input, outputs=vgg16.get_layer('block3_pool').output)
 
-    net['pool3'] = FeatureExtractor(net['input'])
+    pool3 = FeatureExtractor(input)
     
     # Block 4
-    conv4_1 = Conv2D(512, (3, 3),activation='relu',padding='same',name='conv4_1')(net['pool3'])
+    conv4_1 = Conv2D(512, (3, 3),activation='relu',padding='same',name='conv4_1')(pool3)
     conv4_2 = Conv2D(512, (3, 3),activation='relu',padding='same',name='conv4_2')(conv4_1)
     conv4_3 = Conv2D(512, (3, 3),activation='relu',padding='same',name='conv4_3')(conv4_2)
     pool4 = MaxPooling2D((2, 2), strides=(2, 2), padding='same',name='pool4')(conv4_3)
@@ -275,5 +274,5 @@ def SSD(input_shape, num_classes):
                                mbox_priorbox],
                               axis=2,
                               name='predictions')
-    model = Model(net['input'], outputs=predictions)
+    model = Model(input, outputs=predictions)
     return model
