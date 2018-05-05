@@ -37,7 +37,7 @@ def SSD(input_shape, num_classes):
     FeatureExtractor = Model(inputs=inceptionV3.input, outputs=inceptionV3.get_layer('mixed2').output)
 
     pool3 = FeatureExtractor(input)
-VGG16,19,Resnet50
+
     conv4_0 = Conv2DTranspose(512, (4, 4), name='conv4_inceptionv3', activation='relu',   border_mode='valid')(pool3) #for inceptionV3
 
     # Block 4
