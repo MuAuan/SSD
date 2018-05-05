@@ -33,17 +33,11 @@ def SSD(input_shape, num_classes):
     input_shape = (input_shape[1], input_shape[0], 3)
         
     input = Input(input_shape)
-    #vgg16 = VGG16(input_shape=input_shape, include_top=False, weights='imagenet')
-    #vgg19 = VGG19(input_shape=input_shape, include_top=False, weights='imagenet')
     inceptionV3 = InceptionV3(input_shape=input_shape,include_top=False, weights='imagenet')
-    #resnet50 = ResNet50(input_shape=input_shape,include_top=False, weights='imagenet')
-    #FeatureExtractor = Model(inputs=vgg16.input, outputs=vgg16.get_layer('block3_pool').output)
     FeatureExtractor = Model(inputs=inceptionV3.input, outputs=inceptionV3.get_layer('mixed2').output)
-    #FeatureExtractor = Model(inputs=resnet50.input, outputs=resnet50.get_layer('add_7').output)
-    #FeatureExtractor = Model(inputs=vgg19.input, outputs=vgg19.get_layer('block3_pool').output)
 
     pool3 = FeatureExtractor(input)
-    #conv4_0 = Conv2DTranspose(512, (2, 2), name='conv4_0', activation='relu',   border_mode='valid')(pool3) #for VGG16,19,Resnet50
+VGG16,19,Resnet50
     conv4_0 = Conv2DTranspose(512, (4, 4), name='conv4_inceptionv3', activation='relu',   border_mode='valid')(pool3) #for inceptionV3
 
     # Block 4
