@@ -36,6 +36,7 @@ def SSD(input_shape, num_classes):
     FeatureExtractor = Model(inputs=vgg16.input, outputs=vgg16.get_layer('block3_pool').output)
 
     pool3 = FeatureExtractor(input)
+    conv4_0 = Conv2DTranspose(512, (2, 2), name='conv4_0', activation='relu', border_mode='valid')(pool3) #for VGG16,19,Resnet50
     
     # Block 4
     conv4_1 = Conv2D(512, (3, 3),activation='relu',padding='same',name='conv4_1')(pool3)
