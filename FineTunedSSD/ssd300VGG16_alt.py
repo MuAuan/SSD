@@ -29,14 +29,10 @@ def SSD(input_shape, num_classes):
     """
 
     # Block 1
-    input_tensor = Input(shape=input_shape)
     input_shape = (input_shape[1], input_shape[0], 3)
-    img_size = (input_shape[1], input_shape[0])
-    vgg16_input_shape = (input_shape[1], input_shape[0], 3)
-
-    net = {}
+    
     input = Input(input_shape)
-    vgg16 = VGG16(input_shape=vgg16_input_shape, include_top=False, weights='imagenet')
+    vgg16 = VGG16(input_shape=input_shape, include_top=False, weights='imagenet')
     FeatureExtractor = Model(inputs=vgg16.input, outputs=vgg16.get_layer('block3_pool').output)
 
     pool3 = FeatureExtractor(input)
